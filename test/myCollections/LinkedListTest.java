@@ -220,6 +220,7 @@ public class LinkedListTest {
             fail("next do not throw the Exception when no more ellements");
         } catch (final java.util.NoSuchElementException e) {}
     }
+
     @Test
     public void testHasPreviouseWhenIteratorAtTheEndOfTheCollection() {
         final LinkedList<Integer> testInstance = new LinkedList<>();
