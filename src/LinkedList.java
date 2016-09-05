@@ -130,7 +130,9 @@ public class LinkedList<T> implements List<T> {
     @Override
     public void clear() {
         // BEGIN (write your solution here)
-        removeAll(this);
+        this.first=null;
+        this.last=null;
+        this.size=0;
         // END
     }
 
@@ -163,7 +165,8 @@ public class LinkedList<T> implements List<T> {
         addAll(c);
 
     }
-    public LinkedList(){}
+    public LinkedList(){
+    }
 
     private void unlink(Item<T> item){
 

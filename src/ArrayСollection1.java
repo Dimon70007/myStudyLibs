@@ -52,7 +52,6 @@ public class ArrayСollection1<T> implements Collection<T> {
     @Override
     public boolean add(T t) {
         if (m.length==size){
-
             final T[] oldM= m;
             m=(T[]) new Object[(this.size()+1)*2];
             System.arraycopy(oldM,0,m,0,oldM.length);
