@@ -1,3 +1,5 @@
+package myCollections;
+
 /**
  * Created by OTBA}|{HbIu` on 08.08.16.
  */
