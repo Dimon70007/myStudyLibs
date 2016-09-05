@@ -1,3 +1,4 @@
+package myCollections;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class LinkedList<T> implements List<T> {
     @Override
     public Object[] toArray() {
         // BEGIN (write your solution here)
-        Object[] newArr= new Object[this.size()];
+        final T[] newArr= (T[]) new Object[this.size()];
         Item<T> tmp=first;
             for (int i = 0; tmp!=null; i++) {
                 newArr[i] = tmp.element;
@@ -48,7 +49,8 @@ public class LinkedList<T> implements List<T> {
     public <T1> T1[] toArray(T1[] a) {
         // BEGIN (write your solution here)
         if(a.length<size()){
-
+//a = (T1[])java.lang.reflect.Array.newInstance(
+//            a.getClass().getComponentType(), size);
             return (T1[]) Arrays.copyOf(toArray(), size(), a.getClass());
 
         }
@@ -90,7 +92,6 @@ public class LinkedList<T> implements List<T> {
             }
             current=current.getNext();
         }
-
         return false;
         // END
     }
@@ -145,7 +146,6 @@ public class LinkedList<T> implements List<T> {
         T current;
         Item<T> tmp=first;
         for(int i = 0; tmp!=null; i++) {
-
             if (i == index) {
                 current = tmp.element;
                 unlink(tmp);
@@ -213,8 +213,9 @@ public class LinkedList<T> implements List<T> {
         Item<T> tmp=first;
         for(int i=0;tmp!=null;i++){
             T current=tmp.element;
-            if (target==null ? current==null : target.equals(current))
+            if (target==null ? current==null : target.equals(current)){
                 return i;
+            }
             tmp=tmp.getNext();
         }
         return -1;
@@ -358,8 +359,11 @@ public class LinkedList<T> implements List<T> {
             }
 
             if(current==null) {
-                current=LinkedList.this.last;
-                this.last=current;
+                current=LinkedList.this.last;//т.к. у нас проверка на то что
+                //current!=first то если current==null будет означать конец списка
+                //и в принципе нет разницы присвоить ему last или LinkedList.this.lastn
+                //так как в этом случае они ссылаются на 1 объект
+                this.last=current;//эта операция нужна для вызова remove и set
             }else {
                 this.last=current.getPrev();
                 current = current.getPrev();
@@ -375,18 +379,8 @@ public class LinkedList<T> implements List<T> {
             if (last==null){
                 throw new IllegalStateException();
             }
-            if(last.getPrev()!=null){
-                last.getPrev().next=last.getNext();
 
-            }else{
-                LinkedList.this.first=last.getNext();
-            }
-            if(last.getNext()!=null){
-                last.getNext().prev=last.getPrev();
-            } else{
-                LinkedList.this.last=last.getPrev();
-            }
-            LinkedList.this.size--;
+            LinkedList.this.unlink(last);
             index--;
             last=null;
             // END
