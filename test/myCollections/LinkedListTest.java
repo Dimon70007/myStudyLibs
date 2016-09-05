@@ -1,3 +1,5 @@
+package myCollections;
+
 import org.junit.Test;
 
 import java.util.Collection;
@@ -195,6 +197,29 @@ public class LinkedListTest {
         } catch (final java.util.NoSuchElementException e) {}
     }
 
+
+    @Test
+    public void testNextOnSecondPosition() throws Exception {
+        final LinkedList<Integer> testInstance = new LinkedList<>();
+        testInstance.add(1);
+        testInstance.add(2);
+        testInstance.add(3);
+
+        final ListIterator<Integer> iter = testInstance.listIterator();
+        iter.next();
+        iter.next();
+        iter.next();
+        iter.previous();
+        iter.previous();
+        iter.previous();
+        assertEquals(iter.next(),new Integer(1));
+        iter.next();
+        iter.next();
+        try {
+            iter.next();
+            fail("next do not throw the Exception when no more ellements");
+        } catch (final java.util.NoSuchElementException e) {}
+    }
     @Test
     public void testHasPreviouseWhenIteratorAtTheEndOfTheCollection() {
         final LinkedList<Integer> testInstance = new LinkedList<>();
@@ -210,7 +235,7 @@ public class LinkedListTest {
     @Test
     public void testPreviouseIndexWhenItEqualsTo1() {
         final LinkedList<Integer> testInstance = new LinkedList<>();
-        testInstance.add(1);
+        testInstance.add(2);
         testInstance.add(1);
 
         final ListIterator<Integer> listIterator = testInstance.listIterator();
