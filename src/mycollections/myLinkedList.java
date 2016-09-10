@@ -1,8 +1,8 @@
-package myCollections;
+package mycollections;
 
 import java.util.*;
 
-public class LinkedList<T> implements List<T> {
+public class myLinkedList<T> implements List<T> {
 
     private Item<T> first = null;
 
@@ -158,14 +158,14 @@ public class LinkedList<T> implements List<T> {
     }
 
     // BEGIN (write your solution here)
-    public LinkedList(final Collection<? extends T> c){
+    public myLinkedList(final Collection<? extends T> c){
         if(c==null){
             throw new NullPointerException();
         }
         addAll(c);
 
     }
-    public LinkedList(){
+    public myLinkedList(){
     }
 
     private void unlink(Item<T> item){
@@ -278,15 +278,15 @@ public class LinkedList<T> implements List<T> {
                 throw new IndexOutOfBoundsException();
             }
             //some optimization
-            if (index<(LinkedList.this.size()/2)){
-                this.current=LinkedList.this.first;
+            if (index<(myLinkedList.this.size()/2)){
+                this.current= myLinkedList.this.first;
                 for(int i = 0;i<index;i++){
 
                     this.current=this.current.getNext();
 
                 }
             } else {
-                this.current=LinkedList.this.last;
+                this.current= myLinkedList.this.last;
                 for(int i = size()-1;i>index;i--){
                     this.current=this.current.getPrev();
                 }
@@ -316,7 +316,7 @@ public class LinkedList<T> implements List<T> {
 
         @Override
         public void add(final T element) {
-            LinkedList.this.add(element);
+            myLinkedList.this.add(element);
         }
 
         @Override
@@ -347,7 +347,7 @@ public class LinkedList<T> implements List<T> {
         @Override
         public boolean hasPrevious() {
             // BEGIN (write your solution here)
-            return current!=LinkedList.this.first && index>0;
+            return current!= myLinkedList.this.first && index>0;
             // END
         }
 
@@ -359,9 +359,9 @@ public class LinkedList<T> implements List<T> {
             }
 
             if(current==null) {
-                current=LinkedList.this.last;//т.к. у нас проверка на то что
+                current= myLinkedList.this.last;//т.к. у нас проверка на то что
                 //current!=first то если current==null будет означать конец списка
-                //и в принципе нет разницы присвоить ему last или LinkedList.this.lastn
+                //и в принципе нет разницы присвоить ему last или myLinkedList.this.lastn
                 //так как в этом случае они ссылаются на 1 объект
                 this.last=current;//эта операция нужна для вызова remove и set
             }else {
@@ -380,7 +380,7 @@ public class LinkedList<T> implements List<T> {
                 throw new IllegalStateException();
             }
 
-            LinkedList.this.unlink(last);
+            myLinkedList.this.unlink(last);
             index--;
             last=null;
             // END

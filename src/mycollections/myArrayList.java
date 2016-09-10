@@ -1,4 +1,4 @@
-package myCollections;
+package mycollections;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.ListIterator;
 import java.util.Iterator;
 
-public class ArrayList<T> implements List<T> {
+public class myArrayList<T> implements List<T> {
 
     private T[] m = (T[])new Object[1];
 
@@ -187,7 +187,7 @@ public class ArrayList<T> implements List<T> {
             // have to implements  iterator, add, remove, equals, and hashCode methods.
             // ListIterator, that allows element insertion and replacement, and bidirectional
             // access in addition to the normal operations that the Iterator interface provides.
-            if (index < 0 || index > ArrayList.this.size()){
+            if (index < 0 || index > myArrayList.this.size()){
 
                 throw new IndexOutOfBoundsException("Index: "+ index);
             }
@@ -199,7 +199,7 @@ public class ArrayList<T> implements List<T> {
 
         @Override
         public boolean hasNext() {
-            return ArrayList.this.size() > index;
+            return myArrayList.this.size() > index;
         }
 
         @Override
@@ -207,12 +207,12 @@ public class ArrayList<T> implements List<T> {
             if (!hasNext())
                 throw new NoSuchElementException();
             last = index;
-            return ArrayList.this.m[index++];
+            return myArrayList.this.m[index++];
         }
 
         @Override
         public void add(final T element) {
-            ArrayList.this.add(index, element);
+            myArrayList.this.add(index, element);
         }
 
         @Override
@@ -222,7 +222,7 @@ public class ArrayList<T> implements List<T> {
                 throw new IllegalStateException();
             }
 
-            ArrayList.this.set(index-1,element);
+            myArrayList.this.set(index-1,element);
             // END
         }
 
@@ -255,7 +255,7 @@ public class ArrayList<T> implements List<T> {
                 throw new NoSuchElementException();
             }
             index=last;
-            return ArrayList.this.m[last--];
+            return myArrayList.this.m[last--];
             // END
         }
 
@@ -263,7 +263,7 @@ public class ArrayList<T> implements List<T> {
         public void remove() {
             if (last == -1)
                 throw new IllegalStateException();
-            ArrayList.this.remove(last);
+            myArrayList.this.remove(last);
             index--;
             last = -1;
         }

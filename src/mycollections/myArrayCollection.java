@@ -1,11 +1,11 @@
-package myCollections;
+package mycollections;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayCollection<T> implements Collection<T> {
+public class myArrayCollection<T> implements Collection<T> {
 
     private T[] m = (T[])new Object[1];
 
@@ -135,7 +135,7 @@ public class ArrayCollection<T> implements Collection<T> {
 
         @Override
         public boolean hasNext() {
-            return ArrayCollection.this.size() > index;
+            return myArrayCollection.this.size() > index;
         }
 
         @Override
@@ -143,13 +143,13 @@ public class ArrayCollection<T> implements Collection<T> {
             if (!hasNext())
                 throw new NoSuchElementException();
             last = index;
-            return ArrayCollection.this.m[index++];
+            return myArrayCollection.this.m[index++];
         }
 
         public void remove() {
             if (last == -1)
                 throw new IllegalStateException();
-            ArrayCollection.this.remove(last);
+            myArrayCollection.this.remove(last);
             index--;
             last = -1;
         }

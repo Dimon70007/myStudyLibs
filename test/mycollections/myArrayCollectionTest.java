@@ -1,4 +1,4 @@
-package myCollections;
+package mycollections;
 
 import org.junit.Test;
 
@@ -9,11 +9,11 @@ import static org.junit.Assert.*;
 /**
  * тесты писать умею, но эти не мои
  */
-public class ArrayCollectionTest {
+public class myArrayCollectionTest {
 
     @Test
     public void testToArrayWhenInputArrayHaveSizeOne() throws Exception {
-        final Collection<Integer> testInstance = new ArrayCollection<>();
+        final Collection<Integer> testInstance = new myArrayCollection<>();
         testInstance.add(1);
         testInstance.add(2);
         testInstance.add(3);
@@ -30,7 +30,7 @@ public class ArrayCollectionTest {
 
     @Test
     public void testToArrayWhenInputArrayHaveCorrectSize() throws Exception {
-        final Collection<Integer> testInstance = new ArrayCollection<>();
+        final Collection<Integer> testInstance = new myArrayCollection<>();
         testInstance.add(1);
         testInstance.add(2);
         testInstance.add(3);

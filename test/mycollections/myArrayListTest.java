@@ -1,4 +1,4 @@
-package myCollections;
+package mycollections;
 
 import org.junit.Test;
 
@@ -11,23 +11,23 @@ import static org.junit.Assert.*;
 /**
  * тесты писать умею, но эти не мои
  */
-public class ArrayListTest {
+public class myArrayListTest {
 
     @Test
     public void testSizeWhenSizeIs0() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         assertEquals(0, testInstance.size());
     }
 
     @Test
     public void testIsEmptyWhenEmpty() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         assertTrue(testInstance.isEmpty());
     }
 
     @Test
     public void testToArrayWhenInputArrayHaveSizeOne() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
         testInstance.add(3);
@@ -44,7 +44,7 @@ public class ArrayListTest {
 
     @Test
     public void testToArrayWhenInputArrayHaveCorrectSize() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
         testInstance.add(3);
@@ -57,7 +57,7 @@ public class ArrayListTest {
 
     @Test
     public void testContains() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
 
@@ -67,7 +67,7 @@ public class ArrayListTest {
 
     @Test
     public void testAdd() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(1);
 
@@ -77,7 +77,7 @@ public class ArrayListTest {
 
     @Test
     public void testRemoveFirstElement() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
         testInstance.remove(1);
@@ -88,7 +88,7 @@ public class ArrayListTest {
 
     @Test
     public void testRemoveLastElement() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
         testInstance.remove(2);
@@ -99,8 +99,8 @@ public class ArrayListTest {
 
     @Test
     public void testContainsAll() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
-        final Collection<Integer> testInstance2 = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
+        final Collection<Integer> testInstance2 = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
 
@@ -112,7 +112,7 @@ public class ArrayListTest {
 
     @Test
     public void testAddAll() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
 
@@ -125,8 +125,8 @@ public class ArrayListTest {
 
     @Test
     public void testRemoveAll() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
-        final Collection<Integer> testInstance2 = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
+        final Collection<Integer> testInstance2 = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
 
@@ -141,8 +141,8 @@ public class ArrayListTest {
 
     @Test
     public void testRetainAll() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
-        final Collection<Integer> testInstance2 = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
+        final Collection<Integer> testInstance2 = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
 
@@ -157,7 +157,7 @@ public class ArrayListTest {
 
     @Test
     public void testClear() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(1);
 
@@ -169,7 +169,7 @@ public class ArrayListTest {
 
     @Test
     public void testRemoveBeforeNext() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(2);
 
         final Iterator<Integer> iter = testInstance.iterator();
@@ -181,7 +181,7 @@ public class ArrayListTest {
 
     @Test
     public void testNextOnEmptyCollection() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
 
@@ -198,7 +198,7 @@ public class ArrayListTest {
 
     @Test
     public void testHasPreviouseWhenIteratorAtTheEndOfTheCollection() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
 
@@ -210,7 +210,7 @@ public class ArrayListTest {
 
     @Test
     public void testPreviouseIndexWhenItEqualsTo1() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(1);
 
@@ -223,7 +223,7 @@ public class ArrayListTest {
 
     @Test
     public void testSetWhenNeitherNextNorPreviousHaveBeenCalled() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
 
         final ListIterator<Integer> listIterator = testInstance.listIterator();
@@ -236,7 +236,7 @@ public class ArrayListTest {
 
     @Test
     public void testSet() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
 
         final ListIterator<Integer> listIterator = testInstance.listIterator();
@@ -247,7 +247,7 @@ public class ArrayListTest {
 
     @Test
     public void testPreviouseOnCollectionWithOneElement() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
 
         final ListIterator<Integer> listIterator = testInstance.listIterator();
@@ -259,7 +259,7 @@ public class ArrayListTest {
 
     @Test
     public void testPreviouseIndex() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
 
         final ListIterator<Integer> listIterator = testInstance.listIterator();
@@ -270,7 +270,7 @@ public class ArrayListTest {
 
     @Test
     public void testPreviouseIndexWhenEmptyCollection() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
 
         final ListIterator<Integer> listIterator = testInstance.listIterator();
 
@@ -279,7 +279,7 @@ public class ArrayListTest {
 
     @Test
     public void testPreviouseWhenEmptyCollection() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
 
         final ListIterator<Integer> listIterator = testInstance.listIterator();
 
@@ -291,7 +291,7 @@ public class ArrayListTest {
 
     @Test
     public void testHasPreviouseWhenEmptyCollection() {
-        final ArrayList<Integer> testInstance = new ArrayList<>();
+        final myArrayList<Integer> testInstance = new myArrayList<>();
 
         final ListIterator<Integer> listIterator = testInstance.listIterator();
 
@@ -300,7 +300,7 @@ public class ArrayListTest {
 
     @Test
     public void testRemoveTwoTimeInTheRow() throws Exception {
-        final Collection<Integer> testInstance = new ArrayList<>();
+        final Collection<Integer> testInstance = new myArrayList<>();
         testInstance.add(1);
         testInstance.add(2);
 
