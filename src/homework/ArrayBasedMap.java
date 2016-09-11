@@ -5,13 +5,6 @@ import java.util.*;
 public class ArrayBasedMap<K, V> implements Map<K, V> {
 
     private List<Pair> values = new ArrayList<Pair>();
-//
-//    public ArrayBasedMap(){}
-//
-//    public ArrayBasedMap(K key,V value){
-//        put(key,value);
-//    }
-//
 
     @Override
     public int size() {
@@ -89,28 +82,28 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         return null;
         // END
     }
-    //my method
-    private int newIndex(final Object key){
-        //если у нас уже есть элемент с одинаковым ключом
-        // - мы вызываем другой алгоритм хэширования уже от ключа
-        // то есть для доступа к объекту у которого 4 раза выпал одинаковый ключ
-        // надо 4 раза вызвать другой метод
-        //при чем надо ключ выбирать из элементов за пределами массива
-        //пока сделаю реализацию без хэшей
-        try {
-            return Integer.valueOf(key.toString());
-        }catch (ClassCastException e){
-            throw new IllegalArgumentException();
-        }
-    }
-    //my method
-    private int hashOfKey(final K key){
-        if (key==null)
-            return 0;
-
-        return key.toString().hashCode();
-
-    }
+//    //my method
+//    private int newIndex(final Object key){
+//        //если у нас уже есть элемент с одинаковым ключом
+//        // - мы вызываем другой алгоритм хэширования уже от ключа
+//        // то есть для доступа к объекту у которого 4 раза выпал одинаковый ключ
+//        // надо 4 раза вызвать другой метод
+//        //при чем надо ключ выбирать из элементов за пределами массива
+//        //пока сделаю реализацию без хэшей:))
+//        try {
+//            return Integer.valueOf(key.toString());
+//        }catch (ClassCastException e){
+//            throw new IllegalArgumentException();
+//        }
+//    }
+//    //my method
+//    private int hashOfKey(final K key){
+//        if (key==null)
+//            return 0;
+//
+//        return key.toString().hashCode();
+//
+//    }
     //my method
     private void checkNull(Object item){
         if(item==null)
@@ -147,6 +140,9 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     @Override
     public void clear() {
         // BEGIN (write your solution here)
+        if(isEmpty()){
+            throw new UnsupportedOperationException();
+        }
         values.clear();
         // END
     }
@@ -161,99 +157,114 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     @Override
     public Collection<V> values() {
         // BEGIN (write your solution here)
-        return new Valls();
+        Collection<V> vals=new ArrayList<>();
+        if (isEmpty())
+            return vals;
+        for(Pair pair:values)
+            vals.add(pair.getValue());
+        return vals;
+//        return new Valls();
         // END
     }
 
-    private class Valls extends AbstractCollection<V>{
-        @Override
-        public int size() {
-            return ArrayBasedMap.this.size();
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return ArrayBasedMap.this.isEmpty();
-        }
-
-        @Override
-        public boolean contains(Object o) {
-            return ArrayBasedMap.this.containsValue(o);
-        }
-
-        @Override
-        public Iterator<V> iterator() {
-
-            return new Iterator<V>() {
-                @Override
-                public boolean hasNext() {
-                    return ArrayBasedMap.this.values.iterator().hasNext();
-                }
-
-                @Override
-                public void remove() {
-                    ArrayBasedMap.this.values.iterator().remove();
-                }
-
-                @Override
-                public V next() {
-                    return ArrayBasedMap.this.values.iterator().next().getValue();
-                }
-            };
-        }
-
-        @Override
-        public boolean remove(Object o) {
-            for(V value=this.iterator().next(); this.iterator().hasNext(); ){
-                if(value == null? o==null: value.equals(o)) {
-                    iterator().remove();
-                    return true;
-                }//if did not return then value does not exist in map
-            }
-            return false;
-        }
-
-        @Override
-        public boolean containsAll(Collection<?> c) {
-            ArrayBasedMap.this.checkNull(c);
-            for (Object item : c) {
-                if (!ArrayBasedMap.this.containsValue(item))
-                        return false;
-                //if did not return then all c items contains in map
-            }
-            return true;
-        }
-
-        @Override
-        public boolean removeAll(Collection<?> c) {
-            ArrayBasedMap.this.checkNull(c);
-            int modifications=0;
-            for (Object item : c) {
-                if(remove(item))
-                    modifications++;
-                //if did not return then all c items contains in map
-            }
-            return modifications>0;
-        }
-
-        @Override
-        public boolean retainAll(Collection<?> c) {
-            ArrayBasedMap.this.checkNull(c);
-            int modifications=0;
-            for (V value=iterator().next();iterator().hasNext();) {
-                if(!c.contains(value)){
-                    iterator().remove();
-                    modifications++;
-                }
-            }
-            return modifications>0;
-        }
-
-        @Override
-        public void clear() {
-            ArrayBasedMap.this.clear();
-        }
-    }
+//    private class Valls<V> extends AbstractCollection<V>{
+//
+//        @Override
+//        public int size() {
+//            return ArrayBasedMap.this.size();
+//        }
+//
+//        @Override
+//        public boolean isEmpty() {
+//            return ArrayBasedMap.this.isEmpty();
+//        }
+//
+//        @Override
+//        public boolean contains(Object o) {
+//            return containsValue(o);
+//        }
+//
+//        @Override
+//        public Iterator<V> iterator() {
+//
+//            return new Iterator<V>() {
+//                private Iterator<Pair> it=ArrayBasedMap.this.values.iterator();
+//
+//                @Override
+//                public void forEachRemaining(Consumer<? super V> action) {
+//                    Objects.requireNonNull(action);
+//                    while (hasNext())
+//                        action.accept(next());
+//                }
+//
+//                @Override
+//                public boolean hasNext() {
+//                    return it.hasNext();
+//                }
+//
+//                @Override
+//                public void remove() {
+//                    it.remove();
+//                }
+//
+//                @Override
+//                public V next() {
+//                    return (V) it.next().getValue();
+//                }
+//            };
+//
+//        }
+//
+//        @Override
+//        public void forEach(Consumer<? super V> action) {
+//            iterator().forEachRemaining(action);
+//        }
+//
+//        @Override
+//        public boolean remove(Object o) {
+//            V value;
+//            Iterator<V> it=iterator();
+//            while (it.hasNext()){
+//                value=it.next();
+//                if(value == null? o==null: value.equals(o)) {
+//                    it.remove();
+//                    return true;
+//                }//if did not return then value does not exist in map
+//            }
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean removeAll(Collection<?> c) {
+//            ArrayBasedMap.this.checkNull(c);
+//            int modifications=0;
+//            for (Object item : c) {
+//                if(remove(item))
+//                    modifications++;
+//                //if did not return then all c items does not contains in map
+//            }
+//            return modifications>0;
+//        }
+//
+//        @Override
+//        public boolean retainAll(Collection<?> c) {
+//            ArrayBasedMap.this.checkNull(c);
+//            int modifications=0;
+//            while (iterator().hasNext()) {
+//                if(!c.contains(iterator().next())){
+//                    iterator().remove();
+//                    modifications++;
+//                }
+//            }
+//            return modifications>0;
+//        }
+//
+//        @Override
+//        public void clear() {
+//            ArrayBasedMap.this.clear();
+//        }
+//
+//    }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
