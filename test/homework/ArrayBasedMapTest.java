@@ -86,7 +86,7 @@ public class ArrayBasedMapTest {
      * {@code supportsRemove}.
      */
     public ArrayBasedMapTest() {
-        this(false, false, true, true, true, true);
+        this(false, true, true, true, true, true);
     }
 
     /**
@@ -169,8 +169,7 @@ public class ArrayBasedMapTest {
 
         assertEquals(map.size(), valueCollection.size());
         assertEquals(valueCollection.size() == 0, valueCollection.isEmpty());
-        assertEquals(
-                !valueCollection.isEmpty(), valueCollection.iterator().hasNext());
+        assertEquals(!valueCollection.isEmpty(), valueCollection.iterator().hasNext());
         for (Student value : valueCollection) {
             assertTrue(map.containsValue(value));
             assertTrue(allowsNullValues || (value != null));
