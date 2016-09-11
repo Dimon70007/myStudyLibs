@@ -294,6 +294,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         @Override
         public V setValue(V value) {
             final V oldValue = this.value;
+
             this.value = value;
             return oldValue;
         }
