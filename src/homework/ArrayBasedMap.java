@@ -1,15 +1,49 @@
 package homework;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ArrayBasedMap<K, V> implements Map<K, V> {
 
-    private List<Pair> values = new ArrayList<Pair>();
+    private double loadFactor;
+    private final static double DEFAULT_LOADFACTOR=0.75;
+    private int capacity;
+    private final static int DEFAULT_CAPACITY=Integer.MAX_VALUE/1000000;
+    private final static int MULTIPLIER =5;
+    private int threshold;
+    private List<List<Pair>> values;
+    private int size=0;
+
+
+    public ArrayBasedMap(final int capacity, final double loadFactor){
+        this.loadFactor=loadFactor;
+        this.capacity=capacity;
+        this.values=new ArrayList<>(capacity);
+        this.threshold=(int)(capacity*loadFactor);
+    }
+    public ArrayBasedMap(final int capacity){
+        this(capacity,DEFAULT_LOADFACTOR);
+    }
+
+    public ArrayBasedMap(){
+        this(DEFAULT_CAPACITY,DEFAULT_LOADFACTOR);
+    }
+
+
+    public ArrayBasedMap(Map<? extends K,? extends V> m){
+
+        this((int)(DEFAULT_CAPACITY*DEFAULT_LOADFACTOR)- m.size() > m.size()*MULTIPLIER?
+                DEFAULT_CAPACITY:
+                m.size()*MULTIPLIER);
+        this.values=new ArrayList<>(capacity);
+        this.threshold=(int)(capacity*loadFactor);
+        this.putAll(m);
+    }
 
     @Override
     public int size() {
         // BEGIN (write your solution here)
-        return values.size();
+        return this.size;
         // END
     }
 
@@ -23,118 +57,171 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     @Override
     public boolean containsKey(Object key) {
         // BEGIN (write your solution here)
-        checkNull(key);
-        Iterator<Pair> iterator=values.iterator();
-        Pair pair;
-        while(iterator.hasNext()){
-            pair=iterator.next();
-                if (pair.getKey().equals(key))
-                    return true;
+        if(!isEmpty()) {
+            List<Pair> list = values.get(newIndex((K) key));
+            if (list != null) {
+                for (Pair pair : list) {
+                    if (key == null ? pair.getKey() == null :
+                            key.equals(pair.getKey()))
+                        return true;
+                }
+            }
         }
         return false;
         // END
     }
 
     @Override
-    public boolean containsValue(Object value) {
+    public boolean containsValue( Object value) {
         // BEGIN (write your solution here)
-        Iterator<Pair> iterator=values.iterator();
-        Pair pair;
-        while(iterator.hasNext()){
-            pair=iterator.next();
-                if ( pair.getValue()==null? value==null: pair.getValue().equals(value)) {
-                    return true;
+        if(!isEmpty()) {
+            for (List<Pair> list : values) {
+                if (list != null) {
+                    if (containsValueInList((V) value, list))
+                        return true;
                 }
+            }
         }
         return false;
         // END
+    }
+
+    private boolean containsValueInList(final V value, final List<Pair> list) {
+        for(Pair pair:list){
+            if(value==null? pair.getValue()==null://если оба нулы
+                    value.equals(pair.getValue()))//если оба не нулы
+                return true;
+        }
+        return false;
     }
 
     @Override
     public V get(Object key) {
         // BEGIN (write your solution here)
-        checkNull(key);
-        Iterator<Pair> iterator=values.iterator();
-        Pair pair;
-        while(iterator.hasNext()){
-            pair=iterator.next();
-            if(pair.getKey().equals(key))
-                    return pair.getValue();
+        if(!isEmpty()) {
+            List<Pair> list = values.get(newIndex((K) key));
+            if (list != null) {
+                for (Pair pair : list) {
+                    if (key == null ? pair.getKey() == null :
+                            key.equals(pair.getKey()))
+                        return pair.getValue();
+                }
+            }
         }
         return null;
         // END
     }
 
     @Override
-    public V put(K key, V value) {
+    public V put(final K key, final V value) {
         // BEGIN (write your solution here)
-        checkNull(key);
+        checkCapacity();
         Pair newPair=new Pair(key,value);
-        Iterator<Pair> iterator=values.listIterator();
-        Pair pair;
-        while(iterator.hasNext()){
-            pair=iterator.next();
-            if(pair.getKey().equals(key)) {
-                return pair.setValue(value);
-            }//if did not return then key does not exist in map
+        if(!containsKey(key)) {
+            putPairIfNoKey(key,newPair);
+            size++;
+            return null;
         }
-        values.add(newPair);
-        return null;
+        return putPairIfContainsKey(key,newPair);
         // END
     }
-//    //my method
-//    private int newIndex(final Object key){
-//        //если у нас уже есть элемент с одинаковым ключом
-//        // - мы вызываем другой алгоритм хэширования уже от ключа
-//        // то есть для доступа к объекту у которого 4 раза выпал одинаковый ключ
-//        // надо 4 раза вызвать другой метод
-//        //при чем надо ключ выбирать из элементов за пределами массива
-//        //пока сделаю реализацию без хэшей:))
-//        try {
-//            return Integer.valueOf(key.toString());
-//        }catch (ClassCastException e){
-//            throw new IllegalArgumentException();
-//        }
-//    }
-//    //my method
-//    private int hashOfKey(final K key){
-//        if (key==null)
-//            return 0;
-//
-//        return key.toString().hashCode();
-//
-//    }
-    //my method
-    private void checkNull(Object item){
-        if(item==null)
-            throw new NullPointerException();
+
+    private void putPairIfNoKey(final K key, final Pair newPair) {
+        List<Pair> list=values.get(newIndex(key));
+        if(list==null) {
+            values.set(newIndex(key), createNewListPair(newPair));
+            return;
+        }
+        list.add(newPair);
+
+    }
+
+    private V putPairIfContainsKey(final K key, final Pair newPair) {
+        List<Pair> listPair=values.get(newIndex(key));
+        V value;
+        for(Pair pair:listPair){
+            if(key==null? pair.getKey()==null:
+                    key.equals(pair.getKey())){
+                value=pair.getValue();
+                pair=newPair;
+                return value;
+            }
+        }
+        return null;
+    }
+
+    private List<Pair> createNewListPair(final Pair newPair) {
+        List<Pair> list=new LinkedList<Pair>();
+        list.add(newPair);
+        return list;
+    }
+
+    private  void checkCapacity() {
+        if(threshold<=size)
+            resize();
+    }
+
+    private  void resize() {
+        if (Integer.MAX_VALUE / MULTIPLIER < capacity) {
+            threshold = Integer.MAX_VALUE;
+            capacity = threshold;
+        } else {
+            capacity *= MULTIPLIER;
+            threshold = (int) (capacity * loadFactor);
+        }
+        List<List<Pair>> oldValues=values;
+        transfer(oldValues);
+    }
+
+    private void transfer(List<List<Pair>> oldValues) {
+        values=new ArrayList<List<Pair>>(capacity);
+        oldValues.stream().filter(list -> list != null).forEach(list -> {
+//            for(List<Pair> list:oldValues) { //короче было написано так, а IDE предложила заменить строкой сверху
+//                if (list != null) {
+            for (Pair pair : list)
+                put(pair.getKey(), pair.getValue());
+        });
+
+    }
+
+
+    private int newIndex( K key){
+        if(key==null)
+            return 0;
+        return hashOfKey(key)%capacity;
+    }
+
+    private int hashOfKey(final K key){
+        int h=key.toString().hashCode();
+        h=h ^ (h >>> 20) ^ (h >>> 12);
+        return h ^ (h >>> 7) ^ (h >>> 4);
     }
 
     @Override
     public V remove(Object key) {
         // BEGIN (write your solution here)
-        checkNull(key);
-        Pair tmpPair;
-        Iterator<Pair> iterator=values.iterator();
-        Pair pair;
-        while(iterator.hasNext()){
-            pair=iterator.next();
-            if(pair.getKey().equals(key)) {
-                tmpPair=new Pair(null,pair.getValue());
-                iterator.remove();
-                return tmpPair.getValue();
-            }//if did not return then key does not exist in map
+        List<Pair> list=values.get(newIndex((K)key));
+        if(list!=null) {
+            Pair pair;
+            while (list.iterator().hasNext()) {
+                pair = list.iterator().next();
+                if (key==null? pair.getKey()==null:
+                        key.equals(pair.getKey())) {
+                    V value = pair.getValue();
+                    list.iterator().remove();
+                    return value;
+                }
+            }
         }
         return null;
-
-
         // END
     }
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-        for (Map.Entry<K, V> e : (Set<Map.Entry<K, V>>)(Set)m.entrySet())
+        for (Map.Entry<K, V> e : (Set<Entry<K, V>>)(Set)m.entrySet())
             put(e.getKey(), e.getValue());
+
     }
 
     @Override
@@ -143,14 +230,22 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         if(isEmpty()){
             throw new UnsupportedOperationException();
         }
-        values.clear();
+        values=new ArrayList<>(DEFAULT_CAPACITY);
+        capacity=DEFAULT_CAPACITY;
+        threshold=(int)(capacity*loadFactor);
         // END
     }
 
     @Override
     public Set<K> keySet() {
-        final Set<K> keys = new HashSet<K>();
-        for (Pair p : values) keys.add(p.getKey());
+        final Set<K> keys = new HashSet<>();
+        //for (List<Pair> list: values)
+        //  if(list!=null){ было через цикл, IDE предложила заменить на лямбду
+        values.stream().filter(list -> list != null).forEachOrdered(list -> {
+        //      for(Pair p:list) было через цикл, IDE предложила заменить на лямбду
+        //          keys.add(p.getKey());
+            keys.addAll(list.stream().map(Pair::getKey).collect(Collectors.toList()));
+        });
         return keys;
     }
 
@@ -160,14 +255,21 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         Collection<V> vals=new ArrayList<>();
         if (isEmpty())
             return vals;
-        for(Pair pair:values)
-            vals.add(pair.getValue());
+//        for(List<Pair> list:values) {
+//            if (list != null) {
+        values.stream().filter(list -> list != null).forEachOrdered(list -> {
+//              for (Pair pair : list)
+//                vals.add(pair.getValue());
+            vals.addAll(list.stream().map(Pair::getValue).collect(Collectors.toList()));
+        });
         return vals;
 //        return new Valls();
         // END
     }
 
-//    private class Valls<V> extends AbstractCollection<V>{
+//    private class Valls<V> extends AbstractCollection<V> implements Iterable<V>{//для того чтобы
+//        //не имплементить метод foreach для данной коллекции нужно всего то заимплементить интерфейс Iterable<V> при чем <V>
+//        // нужно чтобы класс при итерации по нему возвращал не тип Object, а  V
 //
 //        @Override
 //        public int size() {
@@ -190,12 +292,12 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
 //            return new Iterator<V>() {
 //                private Iterator<Pair> it=ArrayBasedMap.this.values.iterator();
 //
-//                @Override
-//                public void forEachRemaining(Consumer<? super V> action) {
-//                    Objects.requireNonNull(action);
-//                    while (hasNext())
-//                        action.accept(next());
-//                }
+////                @Override
+////                public void forEachRemaining(Consumer<? super V> action) {
+////                    Objects.requireNonNull(action);
+////                    while (hasNext())
+////                        action.accept(next());
+////                }
 //
 //                @Override
 //                public boolean hasNext() {
@@ -215,10 +317,10 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
 //
 //        }
 //
-//        @Override
-//        public void forEach(Consumer<? super V> action) {
-//            iterator().forEachRemaining(action);
-//        }
+////        @Override
+////        public void forEach(Consumer<? super V> action) {
+////            iterator().forEachRemaining(action);
+////        }
 //
 //        @Override
 //        public boolean remove(Object o) {
@@ -268,9 +370,12 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return (Set<Entry<K, V>>)(Set)new HashSet<>(values);
+        Set<Entry<K, V>> setPair=new HashSet<Entry<K,V>>();
+        if(!isEmpty()){
+            values.stream().filter(list -> list != null).forEach(setPair::addAll);
+        }
+        return setPair;
     }
-
 
     private class Pair implements Map.Entry<K, V> {
 
@@ -304,7 +409,6 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
             if (this == o) return true;
 
             Map.Entry<K, V> pair = (Map.Entry<K, V>) o;
-
 
             if (key != null ? !key.equals(pair.getKey()) : pair.getKey() != null) return false;
             return !(value != null ? !value.equals(pair.getValue()) : pair.getValue() != null);
