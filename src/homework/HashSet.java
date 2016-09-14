@@ -123,6 +123,6 @@ public class HashSet<T> implements Set<T> {
         // BEGIN (write your solution here)
         elements.clear();
         // END
-    }
+     }
 
 }
