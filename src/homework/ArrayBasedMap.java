@@ -8,18 +8,19 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     private double loadFactor;
     private final static double DEFAULT_LOADFACTOR=0.75;
     private int capacity;
-    private final static int DEFAULT_CAPACITY=Integer.MAX_VALUE/1000000;
+    private final static int DEFAULT_CAPACITY=Integer.MAX_VALUE/10000000;
     private final static int MULTIPLIER =5;
     private int threshold;
-    private List<List<Pair>> values;
-    private int size=0;
+    private ArrayList<List<Pair>> values;
+    private int size;
 
 
     public ArrayBasedMap(final int capacity, final double loadFactor){
         this.loadFactor=loadFactor;
         this.capacity=capacity;
-        this.values=new ArrayList<>(capacity);
+        this.createFullList(capacity);
         this.threshold=(int)(capacity*loadFactor);
+
     }
     public ArrayBasedMap(final int capacity){
         this(capacity,DEFAULT_LOADFACTOR);
@@ -35,11 +36,16 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         this((int)(DEFAULT_CAPACITY*DEFAULT_LOADFACTOR)- m.size() > m.size()*MULTIPLIER?
                 DEFAULT_CAPACITY:
                 m.size()*MULTIPLIER);
-        this.values=new ArrayList<>(capacity);
-        this.threshold=(int)(capacity*loadFactor);
         this.putAll(m);
     }
 
+    private void createFullList(final int capacity){
+        this.size=0;
+        this.values=new ArrayList<>(capacity);
+        for(int i=0;i<capacity;i++) {
+            this.values.add(null);
+        }
+    }
     @Override
     public int size() {
         // BEGIN (write your solution here)
@@ -119,7 +125,6 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         Pair newPair=new Pair(key,value);
         if(!containsKey(key)) {
             putPairIfNoKey(key,newPair);
-            size++;
             return null;
         }
         return putPairIfContainsKey(key,newPair);
@@ -130,20 +135,20 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         List<Pair> list=values.get(newIndex(key));
         if(list==null) {
             values.set(newIndex(key), createNewListPair(newPair));
-            return;
+        }else {
+            list.add(newPair);
         }
-        list.add(newPair);
-
+        size++;
     }
 
     private V putPairIfContainsKey(final K key, final Pair newPair) {
-        List<Pair> listPair=values.get(newIndex(key));
+        List<Pair> listPair=values.get(newIndex((K)key));
         V value;
         for(Pair pair:listPair){
             if(key==null? pair.getKey()==null:
                     key.equals(pair.getKey())){
                 value=pair.getValue();
-                pair=newPair;
+                pair.value=newPair.getValue();
                 return value;
             }
         }
@@ -174,7 +179,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     }
 
     private void transfer(List<List<Pair>> oldValues) {
-        values=new ArrayList<List<Pair>>(capacity);
+        createFullList(capacity);
         oldValues.stream().filter(list -> list != null).forEach(list -> {
 //            for(List<Pair> list:oldValues) { //короче было написано так, а IDE предложила заменить строкой сверху
 //                if (list != null) {
@@ -203,12 +208,14 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         List<Pair> list=values.get(newIndex((K)key));
         if(list!=null) {
             Pair pair;
-            while (list.iterator().hasNext()) {
-                pair = list.iterator().next();
+            Iterator<Pair> it=list.iterator();
+            while (it.hasNext()) {
+                pair = it.next();
                 if (key==null? pair.getKey()==null:
-                        key.equals(pair.getKey())) {
+                        ((K)key).equals(pair.getKey())) {
                     V value = pair.getValue();
-                    list.iterator().remove();
+                    it.remove();
+                    size--;
                     return value;
                 }
             }
@@ -231,8 +238,10 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
             throw new UnsupportedOperationException();
         }
         values=new ArrayList<>(DEFAULT_CAPACITY);
+        createFullList(DEFAULT_CAPACITY);
         capacity=DEFAULT_CAPACITY;
         threshold=(int)(capacity*loadFactor);
+        size=0;
         // END
     }
 

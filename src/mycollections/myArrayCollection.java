@@ -73,15 +73,25 @@ public class myArrayCollection<T> implements Collection<T> {
     }
 
     @Override
-    public boolean remove(final Object o) {
+    public boolean remove(Object o) {
         for (int i = 0; i < size(); i++) {
-            if (m[i].equals(o)) {
-                this.remove(i);
+            if(m[i].equals(o)){
+                System.arraycopy(m,i+1,m,i,size-i);
+                size--;
                 return true;
             }
         }
         return false;
     }
+//    public boolean remove(final Object o) {
+//        for (int i = 0; i < size(); i++) {
+//            if (m[i].equals(o)) {
+//                this.remove(i);
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     @Override
     public boolean containsAll(final Collection<?> c) {
