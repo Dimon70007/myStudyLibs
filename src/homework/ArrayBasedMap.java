@@ -8,7 +8,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     private double loadFactor;
     private final static double DEFAULT_LOADFACTOR=0.75;
     private int capacity;
-    private final static int DEFAULT_CAPACITY=Integer.MAX_VALUE/1000000;
+    private final static int DEFAULT_CAPACITY=Integer.MAX_VALUE/10000000;
     private final static int MULTIPLIER =10;
     private int threshold;
     private ArrayList<List<Pair>> values;
@@ -18,7 +18,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     public ArrayBasedMap(final int capacity, final double loadFactor){
         this.loadFactor=loadFactor;
         this.capacity=capacity;
-        this.createFullList(capacity);
+        this.createNullsList(capacity);
         this.threshold=(int)(capacity*loadFactor);
 
     }
@@ -39,7 +39,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         this.putAll(m);
     }
 
-    private void createFullList(final int capacity){
+    private void createNullsList(final int capacity){
         this.size=0;
         this.values=new ArrayList<>(capacity);
         for(int i=0;i<capacity;i++) {
@@ -179,7 +179,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     }
 
     private void transfer(List<List<Pair>> oldValues) {
-        createFullList(capacity);
+        createNullsList(capacity);
         oldValues.stream().filter(list -> list != null).forEach(list -> {
 //            for(List<Pair> list:oldValues) { //короче было написано так, а IDE предложила заменить строкой сверху
 //                if (list != null) {
@@ -238,10 +238,9 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
             throw new UnsupportedOperationException();
         }
         values=new ArrayList<>(DEFAULT_CAPACITY);
-        createFullList(DEFAULT_CAPACITY);
+        createNullsList(DEFAULT_CAPACITY);
         capacity=DEFAULT_CAPACITY;
         threshold=(int)(capacity*loadFactor);
-        size=0;
         // END
     }
 
@@ -250,7 +249,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
         final Set<K> keys = new HashSet<>();
         //for (List<Pair> list: values)
         //  if(list!=null){ было через цикл, IDE предложила заменить на лямбду
-        values.stream().filter(list -> list != null).forEachOrdered(list -> {
+        values.stream().filter(list -> list != null).forEach(list -> {
         //      for(Pair p:list) было через цикл, IDE предложила заменить на лямбду
         //          keys.add(p.getKey());
             keys.addAll(list.stream().map(Pair::getKey).collect(Collectors.toList()));
@@ -266,7 +265,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
             return vals;
 //        for(List<Pair> list:values) {
 //            if (list != null) {
-        values.stream().filter(list -> list != null).forEachOrdered(list -> {
+        values.stream().filter(list -> list != null).forEach(list -> {
 //              for (Pair pair : list)
 //                vals.add(pair.getValue());
             vals.addAll(list.stream().map(Pair::getValue).collect(Collectors.toList()));
