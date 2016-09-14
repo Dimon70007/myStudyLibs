@@ -1,4 +1,4 @@
-package homework;
+package mycollections;
 
 import java.util.*;
 import java.util.stream.Collectors;
