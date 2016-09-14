@@ -378,7 +378,22 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        Set<Entry<K, V>> setPair=new HashSet<Entry<K,V>>();
+        Set<Entry<K, V>> setPair=new HashSet<Entry<K,V>>(){
+            @Override
+            public boolean isEmpty() {
+                return ArrayBasedMap.this.isEmpty();
+            }
+
+            @Override
+            public int size() {
+                return ArrayBasedMap.this.size();
+            }
+
+            @Override
+            public void clear() {
+                ArrayBasedMap.this.clear();
+            }
+        };
         if(!isEmpty()){
             values.stream().filter(list -> list != null).forEach(setPair::addAll);
         }
