@@ -1,13 +1,14 @@
-package homework;
+package mycollections;
 
+import homework.Student;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 import static org.junit.Assert.*;
-
 /*
+
  * Copyright (C) 2008
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +22,9 @@ import static org.junit.Assert.*;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+
+*/
+
 public class ArrayBasedMapTest {
 
     protected final boolean supportsPut;
@@ -31,24 +34,28 @@ public class ArrayBasedMapTest {
     protected final boolean allowsNullValues;
     protected final boolean supportsIteratorRemove;
 
-    /**
+/*
      * Creates a new, empty instance of the class under test.
      *
      * @return a new, empty map instance.
      * @throws UnsupportedOperationException if it's not possible to make an
      * empty instance of the class under test.
-     */
+*/
+
     protected Map<String, Student> makeEmptyMap() {
         return new ArrayBasedMap<>();
     }
 
-    /**
+/*
+*
      * Creates a new, non-empty instance of the class under test.
      *
      * @return a new, non-empty map instance.
      * @throws UnsupportedOperationException if it's not possible to make a
      * non-empty instance of the class under test.
-     */
+
+*/
+
     protected Map<String, Student> makePopulatedMap() {
         return new ArrayBasedMap<String, Student>(){{
             for (int i = 0; i < 1_000; i++) {
@@ -57,41 +64,53 @@ public class ArrayBasedMapTest {
         }};
     }
 
-    /**
+/*
+*
      * Creates a new key that is not expected to be found
      * in {@link #makePopulatedMap()}.
      *
      * @return a key.
      * @throws UnsupportedOperationException if it's not possible to make a key
      * that will not be found in the map.
-     */
+
+*/
+
     protected String getKeyNotInPopulatedMap() {
         return "keyNotInMap";
     }
 
-    /**
+/*
+*
      * Creates a new value that is not expected to be found
      * in {@link #makePopulatedMap()}.
      *
      * @return a value.
      * @throws UnsupportedOperationException if it's not possible to make a value
      * that will not be found in the map.
-     */
+
+*/
+
     protected  Student getValueNotInPopulatedMap() {
         return new Student("notInMap");
     }
 
-    /**
+/*
+*
      * Constructor that assigns {@code supportsIteratorRemove} the same value as
      * {@code supportsRemove}.
-     */
+*/
+
+
     public ArrayBasedMapTest() {
         this(false, true, true, true, true, true);
     }
 
-    /**
+/*
+*
      * Constructor with an explicit {@code supportsIteratorRemove} parameter.
-     */
+*/
+
+
     protected ArrayBasedMapTest(
             boolean allowsNullKeys,
             boolean allowsNullValues,
@@ -107,12 +126,15 @@ public class ArrayBasedMapTest {
         this.supportsIteratorRemove = supportsIteratorRemove;
     }
 
-    /**
+/*
+*
      * Used by tests that require a map, but don't care whether it's
      * populated or not.
      *
      * @return a new map instance.
-     */
+*/
+
+
     protected Map<String, Student> makeEitherMap() {
         try {
             return makePopulatedMap();
@@ -137,14 +159,17 @@ public class ArrayBasedMapTest {
         return true;
     }
 
-    /**
+/*
+*
      * Checks all the properties that should always hold of a map. Also calls
      * {@link #assertMoreInvariants} to check invariants that are peculiar to
      * specific implementations.
      *
      * @see #assertMoreInvariants
      * @param map the map to check.
-     */
+
+*/
+
     protected final void assertInvariants(Map<String, Student> map) {
         Set<String> keySet = map.keySet();
         Collection<Student> valueCollection = map.values();
@@ -218,13 +243,16 @@ public class ArrayBasedMapTest {
         assertMoreInvariants(map);
     }
 
-    /**
+
+/*
      * Override this to check invariants which should hold true for a particular
      * implementation, but which are not generally applicable to every instance
      * of Map.
      *
      * @param map the map whose additional invariants to check.
-     */
+*/
+
+
     protected void assertMoreInvariants(Map<String, Student> map) {
     }
 
@@ -647,7 +675,7 @@ public class ArrayBasedMapTest {
         try {
             map = makePopulatedMap();
             smallerMap = makePopulatedMap();
-            smallerMap.remove(smallerMap.keySet().iterator().next());
+            smallerMap.remove(map.keySet().iterator().next());
         } catch (UnsupportedOperationException e) {
             return;
         }
@@ -768,7 +796,8 @@ public class ArrayBasedMapTest {
         if (supportsPut) {
             int initialSize = map.size();
             map.put(keyToPut, valueToPut);
-            assertEquals(valueToPut, map.get(keyToPut));
+            Student studentTmp = map.get(keyToPut);
+            assertEquals(valueToPut, studentTmp);
             assertTrue(map.containsKey(keyToPut));
             assertTrue(map.containsValue(valueToPut));
             assertEquals(initialSize, map.size());

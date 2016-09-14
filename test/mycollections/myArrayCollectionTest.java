@@ -18,7 +18,7 @@ public class myArrayCollectionTest {
         testInstance.add(2);
         testInstance.add(3);
 
-        final Integer[] input = new Integer[1];
+        final Integer[] input = new Integer[10];
 
         final Integer[] result =  testInstance.toArray(input);
         assertNotEquals(input, result);
@@ -41,5 +41,17 @@ public class myArrayCollectionTest {
         assertArrayEquals(input, result);
     }
 
+    @Test
+    public void testRemoveWhenSizeEqualsLength() throws Exception {
+        final Collection<Integer> testInstance = new myArrayCollection<>();
+        for(int i=0;i<10;i++)
+            testInstance.add(i);
+        for(Integer i:testInstance)
+            testInstance.remove(i);
+        final Integer[] input = new Integer[]{1,2,3};
+
+        final Integer[] result = testInstance.toArray(input);
+//        assertArrayEquals(input, result);
+    }
 
 }
