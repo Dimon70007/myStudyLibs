@@ -8,7 +8,7 @@ public class ArrayBasedMap<K, V> implements Map<K, V> {
     private double loadFactor;
     private final static double DEFAULT_LOADFACTOR=0.75;
     private int capacity;
-    private final static int DEFAULT_CAPACITY=Integer.MAX_VALUE/10000000;
+    private final static int DEFAULT_CAPACITY=Integer.MAX_VALUE/100000000;
     private final static int MULTIPLIER =10;
     private int threshold;
     private ArrayList<List<Pair>> values;
