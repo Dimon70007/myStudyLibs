@@ -12,11 +12,11 @@ public class CollectionsHelper
 
     public T findFirst(final List<T> humans, final String namePrefix, final Sex sex) {
         // BEGIN (write your solution here)
-        ;
-        for (T human : humans) {
+
+        for (T human : humans) {//going by list of humans
             if (human.getName().startsWith(namePrefix)
                     && human.getSex().equals(sex))
-                return human;
+                return human;//return hunam, whos name starts with namePrefix and has equals sex
         }
         return null;
         // END
