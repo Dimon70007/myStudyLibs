@@ -1,6 +1,6 @@
-package main.java.mycollections;
+package mycollections;
 
-import main.java.homework.Student;
+import  homework.Student;
 import org.junit.Test;
 
 import java.util.*;

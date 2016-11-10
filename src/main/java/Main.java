@@ -1,4 +1,3 @@
-package main.java;
 
 /**
  * Created by OTBA}|{HbIu` on 17.09.16.

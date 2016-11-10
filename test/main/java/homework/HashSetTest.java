@@ -1,4 +1,4 @@
-package main.java.homework;
+package  homework;
 import java.util.Set;
 
 public class HashSetTest {

@@ -1,4 +1,4 @@
-package main.java.overridenmethods;
+package  overridenmethods;
 
 /**
  * Created by OTBA}|{HbIu` on 06.09.16.

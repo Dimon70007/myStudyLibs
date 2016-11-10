@@ -1,4 +1,4 @@
-package main.java.homework.Graphs;
+package  homework.Graphs;
 
 import java.util.Set;
 

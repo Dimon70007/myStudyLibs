@@ -1,4 +1,4 @@
-package main.java.mycollections;
+package  mycollections;
 
 import java.util.Collection;
 import java.util.Iterator;

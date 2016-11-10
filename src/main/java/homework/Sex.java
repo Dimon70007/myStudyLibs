@@ -1,4 +1,4 @@
-package main.java.homework;
+package  homework;
 
 /**
  * Created by OTBA}|{HbIu` on 15.09.16.

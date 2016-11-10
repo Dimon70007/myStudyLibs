@@ -1,4 +1,4 @@
-package main.java.homework.Graphs;
+package  homework.Graphs;
 
 /**
  * Created by OTBA}|{HbIu` on 01.11.16.

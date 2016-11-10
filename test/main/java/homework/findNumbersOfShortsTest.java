@@ -1,4 +1,4 @@
-package main.java.homework;
+package  homework;
 
 import org.junit.Test;
 
