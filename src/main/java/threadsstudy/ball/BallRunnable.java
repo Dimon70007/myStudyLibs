@@ -1,4 +1,4 @@
-package threadsstudy;
+package threadsstudy.ball;
 
 import java.awt.*;
 
