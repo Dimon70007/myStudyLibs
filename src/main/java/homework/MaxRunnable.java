@@ -21,6 +21,11 @@ public class MaxRunnable implements Runnable {
     }
 
     public int getResult() {
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
