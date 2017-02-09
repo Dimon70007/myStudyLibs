@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 
 public class myCache {
 /*
-    public static void main(String[] args) {
+    public static void Main(String[] args) {
         someMagic();
         final Integer tmp =5;
         System.out.println(tmp);
