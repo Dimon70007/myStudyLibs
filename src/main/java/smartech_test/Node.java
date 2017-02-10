@@ -32,7 +32,7 @@ public class Node {
         return NodeHelper.convertVetorToMatrix(arr,sizeX);
     }
 
-    public Node nextNode(final int coordinate) {
+    public synchronized Node nextNode(final int coordinate) {
         final int color=arr[coordinate];
         if (color<colorsCount-1){
             arr[coordinate]++;
@@ -44,7 +44,12 @@ public class Node {
     }
 
     public boolean isFinal(){
-        return arr[arr.length-1]>=colorsCount-1;
+        for (int i:arr
+             ) {
+            if (i<colorsCount-1)
+                return false;
+        }
+        return true;
     }
 
     @Override

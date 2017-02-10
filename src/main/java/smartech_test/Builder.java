@@ -37,9 +37,10 @@ public class Builder extends RecursiveTask<Set<Node>> {
 
     @Override
     public Set<Node> compute() {
-//        System.out.println(++counter);
         final List<ForkJoinTask<Set<Node>>> tasks=new ArrayList<>();
-        finalNodes.add(currentNode);
+        final boolean hasBeenAdded=finalNodes.add(currentNode);
+//        if(hasBeenAdded)
+//            counter++;
         if (!currentNode.isFinal()) {
             final int arrLength=currentNode.getLength();
             for (int i = 0; i < arrLength; i++) {
@@ -64,6 +65,7 @@ public class Builder extends RecursiveTask<Set<Node>> {
                 task.join();
             }
         }
+//        System.out.println(counter);
         return finalNodes;
     }
 
