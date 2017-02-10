@@ -26,9 +26,9 @@ public class NodeHelper {
     }
 
     public static int[][] convertVetorToMatrix(final int[] arr, final int sizeX){
-        final int[][] result=new int[sizeX][arr.length/sizeX];
+        final int[][] result=new int[arr.length/sizeX][sizeX];
         for (int i = 0; i < arr.length; i++) {
-            result[i%sizeX][i/sizeX]=arr[i];
+            result[i/sizeX][i%sizeX]=arr[i];
         }
         return result;
     }

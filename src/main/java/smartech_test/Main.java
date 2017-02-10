@@ -18,20 +18,18 @@ public class Main {
 
     public static void main(String... args) throws Exception {
 
-        final ForkJoinPool pool=new ForkJoinPool(8);
+        final ForkJoinPool pool=new ForkJoinPool();
         final Node rootNode=new Node(arrCreator(X_LENGTH,Y_LENGTH),COLORS);
         final Builder builder=new Builder(
                 rootNode
                 , 0
-//                , X_LENGTH
-//                , Y_LENGTH
         );
         final ForkJoinTask<Set<Node>> rootTask=builder.fork();
         pool.submit(rootTask);
         Set<Node> nodes=rootTask.join();
         System.out.println(nodes.size());
         Iterator<Node> iterator=nodes.iterator();
-        for (int i = 0; i < nodes.size(); i++) {
+        for (int i = 0; i < 10; i++) {
             int [][] tmp=iterator.next().get2DArr(X_LENGTH);
             System.out.println(Arrays.deepToString(tmp));
         }
