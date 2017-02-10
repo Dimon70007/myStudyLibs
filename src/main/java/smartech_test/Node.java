@@ -15,17 +15,21 @@ public class Node {
         this.colorsCount=colorsCount;
     }
     public Node(final int [][] arr, final int colorsCount) {
-        this.arr=CoordinateHelper
+        this.arr= NodeHelper
                 .convertMatrixToVector(arr);
 
         this.colorsCount=colorsCount;
+    }
+
+    public int getLength(){
+        return arr.length;
     }
     public int[] getArr() {
         return arr;
     }
 
     public int[][] get2DArr(final int sizeX) {
-        return CoordinateHelper.convertVetorToMatrix(arr,sizeX);
+        return NodeHelper.convertVetorToMatrix(arr,sizeX);
     }
 
     public Node nextNode(final int coordinate) {

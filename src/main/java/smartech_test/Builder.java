@@ -1,6 +1,5 @@
 package smartech_test;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,8 +14,8 @@ public class Builder extends RecursiveTask<Set<Node>> {
 //    private static int counter=0;
     private final Node currentNode;
     private final int deepLevel;
-    private final int sizeY;
-    private final int sizeX;
+//    private final int sizeY;
+//    private final int sizeX;
     private final static int DEFAULT_DEEP_LEVEL=3;
 //    private final Node nextNode;
 //    private final Point currentPoint;
@@ -24,14 +23,14 @@ public class Builder extends RecursiveTask<Set<Node>> {
     public Builder(
               final Node currentNode
               , final int deepLevel
-              , final int sizeX
-              , final int sizeY
+//              , final int sizeX
+//              , final int sizeY
             ) {
 
         this.currentNode=currentNode;
         this.deepLevel=deepLevel;
-        this.sizeX=sizeX;
-        this.sizeY=sizeY;
+//        this.sizeX=sizeX;
+//        this.sizeY=sizeY;
 
     }
 
@@ -43,26 +42,22 @@ public class Builder extends RecursiveTask<Set<Node>> {
 
         finalNodes.add(currentNode);
         if (!currentNode.isFinal()) {
-            for (int y = 0; y < sizeY; y++) {
-                for (int x = 0; x < sizeX; x++) {
-                    Node nextNode = currentNode.nextNode(
-                            CoordinateHelper.convert2DTo1D(
-                                    new Point(x, y), sizeX
-                            )
-                    );
-                    if (nextNode == null)
-                        continue;
+            final int arrLength=currentNode.getLength();
+            for (int i = 0; i < arrLength; i++) {
+                Node nextNode = currentNode.nextNode(i);
+                if (nextNode == null)
+                    continue;
 
-                    final Builder builder = new Builder(
-                            nextNode
-                            , deepLevel + 1
-                            , sizeX
-                            , sizeY);
-                    if (isAsync()) {
-                        tasks.add(builder.fork());
-                    } else {
-                        finalNodes.addAll(builder.compute());
-                    }
+                final Builder builder = new Builder(
+                        nextNode
+                        , deepLevel + 1
+//                        , sizeX
+//                        , sizeY
+                );
+                if (isAsync()) {
+                    tasks.add(builder.fork());
+                } else {
+                    finalNodes.addAll(builder.compute());
                 }
             }
         }
