@@ -10,7 +10,7 @@ import java.util.concurrent.ForkJoinTask;
 public class Main {
     private static final int X_LENGTH=3;
     private static final int Y_LENGTH=3;
-    private static final int COLORS=5;
+    private static final int COLORS=4;
 
 
 
