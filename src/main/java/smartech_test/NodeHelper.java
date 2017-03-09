@@ -1,6 +1,11 @@
 package smartech_test;
 
 import java.awt.*;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
 
 /**
  * Created by OTBA}|{HbIu` on 08.02.17.
@@ -31,5 +36,62 @@ public class NodeHelper {
             result[i/sizeX][i%sizeX]=arr[i];
         }
         return result;
+    }
+
+    public static Set<Node> treeToSet(final Node node){
+        ForkJoinPool helperPool=new ForkJoinPool();
+        final Helper helper=new Helper(node,0);
+        final ForkJoinTask<Set<Node>> helperTask=helper.fork();
+        helperPool.submit(helperTask);
+        final Set<Node> nodes=new HashSet<>();
+        nodes.addAll(helperTask.join());
+        return nodes;
+    }
+
+    private static class Helper extends RecursiveTask<Set<Node>> {
+        private final Node currentNode;
+        private final int deepLevel;
+        private final static int DEFAULT_DEEP_LEVEL=3;
+
+        public Helper(final Node currentNode, final int deepLevel) {
+            this.currentNode=currentNode;
+            this.deepLevel=deepLevel;
+        }
+
+        @Override
+        public Set<Node> compute() {
+            if (!currentNode.hasChildren()){
+                return new HashSet<>();
+            }
+            final List<ForkJoinTask<Set<Node>>> tasks=new ArrayList<>();
+            final Set<Node> children=new HashSet<>();
+            children.addAll(currentNode.getChildren());
+            final Set<Node> otherChildren=new HashSet<>();
+
+            for (Node child:children) {
+                final Helper helper = new Helper(
+                        child
+                        , deepLevel + 1
+                );
+
+                if (isAsync()) {
+                    tasks.add(helper.fork());
+                } else {
+                    otherChildren.addAll(helper.compute());
+                }
+            }
+
+            if (!tasks.isEmpty()){
+                for (ForkJoinTask<Set<Node>> task:tasks) {
+                    otherChildren.addAll(task.join());
+                }
+            }
+            children.addAll(otherChildren);
+            return children;
+        }
+
+        private boolean isAsync() {
+            return deepLevel <= DEFAULT_DEEP_LEVEL;
+        }
     }
 }
