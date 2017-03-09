@@ -8,6 +8,9 @@ import java.util.concurrent.ForkJoinTask;
  * Created by OTBA}|{HbIu` on 09.02.17.
  */
 public class Main {
+    //задание:
+    //сгенерировать все возможные массивы указанного размера (X_LENGTH,Y_LENGTH)с указанным количеством
+    //состояний (COLORS) на ячейку массива
     private static final int X_LENGTH=3;
     private static final int Y_LENGTH=3;
     private static final int COLORS=4;
