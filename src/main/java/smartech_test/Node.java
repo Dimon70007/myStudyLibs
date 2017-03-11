@@ -1,9 +1,6 @@
 package smartech_test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by OTBA}|{HbIu` on 08.02.17.
@@ -135,32 +132,54 @@ public class Node implements Iterable<Node>{
     }
 
     private class NodeIterator implements Iterator<Node>{
+        private int deepLevel;
         Node next;        // next entry to return
         Node current;     // current entry
-        final Iterator<Node> iterator;
+        Iterator<Node> iterator;
+        Deque<Iterator<Node>> parentIterators;
+
 
         NodeIterator() {
             current = next = null;
             next=Node.this;
             iterator=children.iterator();
+            parentIterators=new ArrayDeque<>();
+            this.deepLevel=0;
         }
 
         public final boolean hasNext() {
-            return next!=null;
+            return iterator.hasNext();
         }
 
         public final Node next() {
+            if (next==null)
+                throw new NoSuchElementException();
 
             if (iterator.hasNext()){//iter on children
                 current=next;
-                if(iterator.next().iterator().hasNext()){
-                    next=iterator.next().iterator().next();
+                Node childNode=iterator.next();
+                if(childNode.iterator().hasNext()){
+                    System.out.println("children.size()="+children.size());
+                    deepLevel=parentIterators.size();
+                    if(deepLevel>0 && deepLevel%100000==0)
+                            System.out.println("deeplevel="+deepLevel);
+
+                    parentIterators.push(iterator);
+                    iterator=childNode.iterator();//go down in 1 level lower
                 } else{
-                    next=iterator.next();
+                    next=childNode;
                 }
             } else{
-                next=null;
+                try {
+                    iterator=parentIterators.pop();
+//                    deepLevel--;
+                }catch (NoSuchElementException e){
+                    iterator=null;
+                }
+                next=iterator!=null? iterator.next(): null;
             }
+
+
             return current;
 
 

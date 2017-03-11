@@ -13,7 +13,7 @@ public class Main {
     //состояний (COLORS) на ячейку массива
     private static final int X_LENGTH=3;
     private static final int Y_LENGTH=3;
-    private static final int COLORS=4;
+    private static final int COLORS=3;
 
 
 
@@ -34,13 +34,19 @@ public class Main {
     }
 
     private static int testNG(){
-        Set<Node> nodes=testStarter();
+        Iterable<Node> rootNode=testStarter();
+
         int countOfRightResults=1;
         final int expectedSize=(int)Math.pow(COLORS,X_LENGTH*Y_LENGTH);
 //        while (nodes.size()==expectedSize) {
-
+        int nodesCount=0;
+        for (Node node :rootNode
+             ) {
+            nodesCount++;
+        }
             System.out.println("count of right results="+countOfRightResults);
-            System.out.println("nodes.size()="+nodes.size()+" expectedSize="+expectedSize);
+
+        System.out.println("nodes.size()="+nodesCount+" expectedSize="+expectedSize);
 //            nodes=testStarter();
 //
 //            countOfRightResults++;
@@ -48,11 +54,11 @@ public class Main {
 //                break;
 //
 //        }
-        assert(expectedSize==nodes.size());
-        Iterator<Node> iterator=nodes.iterator();
+        assert(expectedSize==nodesCount);
+        Iterator<Node> iterator=rootNode.iterator();
         try {
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 200; i++) {
                 int [][] tmp=iterator.next().get2DArr(X_LENGTH);
                 System.out.println(Arrays.deepToString(tmp));
             }
@@ -60,7 +66,7 @@ public class Main {
         return countOfRightResults;
     }
 
-    public static Set<Node> testStarter(){
+    public static Iterable<Node> testStarter(){
         final ForkJoinPool pool=new ForkJoinPool();
         final Node rootNode=new Node(arrCreator(X_LENGTH,Y_LENGTH),COLORS);
         final Builder builder=new Builder(
@@ -69,14 +75,14 @@ public class Main {
         );
         final ForkJoinTask<Node> rootTask=builder.fork();
         pool.submit(rootTask);
-        final Set<Node> nodes=new HashSet<>();
         final Node rootNode2=rootTask.join();
         System.out.println("phase1 ends");
         assert(rootNode.equals(rootNode2));
-
-        nodes.addAll(NodeHelper.treeToSet(rootNode));
-        System.out.println("phase2 ends");
-        return nodes;
+//
+//        final Set<Node> nodes=new HashSet<>();
+//        nodes.addAll(NodeHelper.treeToSet(rootNode));
+//        System.out.println("phase2 ends");
+        return rootNode2;
     }
 
     public static int [][] arrCreator(final int xLength, final int yLength){
