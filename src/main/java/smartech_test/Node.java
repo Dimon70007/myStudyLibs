@@ -8,33 +8,40 @@ import java.util.*;
 public class Node implements Iterable<Node>{
 
     private final int[] arr;
+    private final int arrLength;
     private final int colorsCount;
-    private final int coordinate;
+    private final int color;
     private final Set<Node> children;
     private final Node parentNode;
 
     public Node(final Node parentNode
             , final int [] arr
             , final int colorsCount
-            ,final int coordinate) {
+            ,final int color) {
         this.parentNode=parentNode;
         this.arr=arr;
         this.colorsCount=colorsCount;
-        this.coordinate=coordinate;
+        this.color = color;
         this.children=new HashSet<>();
+        arrLength = this.arr.length;
     }
 
     public Node(final int [][] arr, final int colorsCount) {
         this.arr= NodeHelper
                 .convertMatrixToVector(arr);
-        this.coordinate=0;
+        this.color =0;
         this.colorsCount=colorsCount;
         this.parentNode=null;
         this.children=new HashSet<>();
+        arrLength = this.arr.length;
     }
 
-    public int getCoordinate() {
-        return coordinate;
+    public int getColor() {
+        return color;
+    }
+
+    public int getColorsCount() {
+        return colorsCount;
     }
 
     public boolean hasChildren(){
@@ -45,7 +52,7 @@ public class Node implements Iterable<Node>{
         return children;
     }
 
-    public synchronized Set<Node> createChildren(final int nextCoordinate) {
+    public synchronized Set<Node> createChildren(final int nextColor) {
         if(!hasChildren()){
         //если мы все равно сначала генерируем все возможные состояния для первой ячейки
             //то для второй - нужно начинать генерацию...со второй, но что делать с первой...
@@ -72,7 +79,8 @@ public class Node implements Iterable<Node>{
             //в общем будем генерировать множество потомков по одной координате с разными состояниями координаты
             // и потом у этих потомков брать следующую координату и генерить дальше, пока не окажется что
             //последняя координата = colorsCount-1
-            this.children.addAll(getNextNodes(0,nextCoordinate,new HashSet<>()));
+            //короче размер поля 32x32 > количества цветов 256
+            this.children.addAll(getNextNodes(0,nextColor,new HashSet<>()));
         }
         return this.children;
     }
@@ -90,7 +98,7 @@ public class Node implements Iterable<Node>{
     }
 
     public boolean isFinal(){
-        return arr[arr.length-1]==colorsCount-1;
+        return arr[arrLength-1]==colorsCount-1;
     }
 
     @Override
@@ -113,16 +121,20 @@ public class Node implements Iterable<Node>{
     создаем множество нод изменяя значение ячейки с текущей координатой,
     а сохраняем в ноды-потомки следующую координату, полученную параметром
     * */
-    private Set<Node> getNextNodes(final int currentColor,final int nextCoordinate,final Set<Node> acc){
-        if (currentColor==this.colorsCount) {
+    private Set<Node> getNextNodes(final int currentCoordinate,final int nextColor,final Set<Node> acc){
+        if (arrLength==currentCoordinate) {
             return acc;
         }
-        final int nextColor=currentColor+1;
+        final int nextCoordinate= currentCoordinate +1;
         //currentCoordinate
-        arr[coordinate]=currentColor;
-        final Node nextNode=new Node(this,Arrays.copyOf(arr,arr.length),colorsCount,nextCoordinate);
+        int[] nextArr=Arrays.copyOf(arr,arr.length);
+        //внимание следим за руками)))
+        //здесь мы генерируем children с текущим цветом,
+        // а color туда передаем со следующим, получившим снаружи - nextColor
+        nextArr[currentCoordinate]=color;
+        final Node nextNode=new Node(this,nextArr,colorsCount,nextColor);
         acc.add(nextNode);
-        return getNextNodes(nextColor,nextCoordinate,acc);
+        return getNextNodes(nextCoordinate,nextColor,acc);
     }
 
     @Override

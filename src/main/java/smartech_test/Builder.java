@@ -25,12 +25,12 @@ public class Builder extends RecursiveTask<Node> {
     @Override
     public Node compute() {
         final List<ForkJoinTask<Node>> tasks=new ArrayList<>();
-        final int currentCoordinate=currentNode.getCoordinate();
-        if (currentCoordinate==currentNode.getArr().length){
+        final int currentColor=currentNode.getColor();
+        if (currentColor==currentNode.getColorsCount()){
             return currentNode;
         }
-        final int nextCoordinate=currentCoordinate+1;
-        final Set<Node> children=currentNode.createChildren(nextCoordinate);
+        final int nextColor=currentColor+1;
+        final Set<Node> children=currentNode.createChildren(nextColor);
 
 //        System.out.println("curentNodeChildrenSize="+currentNode.getChildren().size());
         for (Node child:children) {
