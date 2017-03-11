@@ -2,12 +2,13 @@ package smartech_test;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
  * Created by OTBA}|{HbIu` on 08.02.17.
  */
-public class Node { //implements Iterable<Node>{
+public class Node implements Iterable<Node>{
 
     private final int[] arr;
     private final int colorsCount;
@@ -126,42 +127,44 @@ public class Node { //implements Iterable<Node>{
         acc.add(nextNode);
         return getNextNodes(nextColor,nextCoordinate,acc);
     }
-//
-//    @Override
-//    public Iterator<Node> iterator() {
-//
-//        return new NodeIterator<>();
-//    }
-//
-//    private class NodeIterator implements Iterator<Node>{
-//        Node next;        // next entry to return
-//        Node current;     // current entry
-//        int index;             // current slot
-//        int size;
-//        Iterator<Node> chIterator=children.iterator();
-//
-//        NodeIterator() {
-//            Set<Node> t=children;
-//            current = next = null;
-//            next=chIterator.hasNext()?chIterator.next():null;
-//        }
-//
-//        public final boolean hasNext() {
-//            return next != null;
-//        }
-//
-//        final Node next() {
-//            Iterator<Node> deepIterator=next.children.iterator();
-//            current=deepIterator.hasNext()
-//                    ?deepIterator.next():chIterator.next();
-//
-//            next=chIterator.hasNext()?
-//                    chIterator.next().iterator().next()
-//                    :null;
-//            TreeSet
-//
-//
-//        }
-//
-//    }
+
+    @Override
+    public Iterator<Node> iterator() {
+
+        return new NodeIterator();
+    }
+
+    private class NodeIterator implements Iterator<Node>{
+        Node next;        // next entry to return
+        Node current;     // current entry
+        final Iterator<Node> iterator;
+
+        NodeIterator() {
+            current = next = null;
+            next=Node.this;
+            iterator=children.iterator();
+        }
+
+        public final boolean hasNext() {
+            return next!=null;
+        }
+
+        public final Node next() {
+
+            if (iterator.hasNext()){//iter on children
+                current=next;
+                if(iterator.next().iterator().hasNext()){
+                    next=iterator.next().iterator().next();
+                } else{
+                    next=iterator.next();
+                }
+            } else{
+                next=null;
+            }
+            return current;
+
+
+        }
+
+    }
 }
