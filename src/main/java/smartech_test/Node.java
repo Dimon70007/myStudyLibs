@@ -13,6 +13,7 @@ public class Node implements Iterable<Node>{
     private final int coordinate;
     private final Collection<Node> children;
     private final Node parentNode;
+    private final int arrLength;
 
     public Node(final Node parentNode
             , final int[] arr
@@ -24,6 +25,7 @@ public class Node implements Iterable<Node>{
         this.coordinate=coordinate;
         this.children=new ArrayList<>();
         lastElement = this.arr[this.arr.length-1];
+        arrLength = this.arr.length;
     }
 
     public Node(final int[][] arr, final int colorsCount) {
@@ -34,6 +36,7 @@ public class Node implements Iterable<Node>{
         this.parentNode=null;
         this.children=new ArrayList<>();
         lastElement = this.arr[this.arr.length-1];
+        arrLength = this.arr.length;
     }
 
     public int getCoordinate() {
@@ -75,7 +78,8 @@ public class Node implements Iterable<Node>{
             //в общем будем генерировать множество потомков по одной координате с разными состояниями координаты
             // и потом у этих потомков брать следующую координату и генерить дальше, пока не окажется что
             //последняя координата = colorsCount-1
-            this.children.addAll(getNextNodes(0,new ArrayList<>()));
+            this.children.addAll(getNextNodes(1,coordinate,new ArrayList<>()));
+//            System.out.println(Arrays.toString(children.toArray())+"\n");
         }
         return this.children;
     }
@@ -93,7 +97,7 @@ public class Node implements Iterable<Node>{
     }
 
     public boolean isFinal(){
-        return coordinate==arr.length;
+        return this.coordinate==arrLength;
     }
 
     @Override
@@ -116,23 +120,26 @@ public class Node implements Iterable<Node>{
     создаем множество нод изменяя значение ячейки с текущей координатой,
     а сохраняем в ноды-потомки следующую координату, полученную параметром
     * */
-    private Collection<Node> getNextNodes(final int nextColor,final Collection<Node> acc){
-//        if (coordinate==0 && nextColor==0){
-//            return getNextNodes(nextColor+1,acc);
-//        }
-        int arrLength=arr.length;
-        if(nextColor==colorsCount){
+    private Collection<Node> getNextNodes(final int currentColor,final int currentCoordinate,final Collection<Node> acc){
+        //если у нас нода с координатой ==arrLength у нее нечего генерить
+        if (currentCoordinate==arrLength) {
+            System.out.println();
             return acc;
         }
+        //если предыдущая проверка ==false значит у нас координата в пределах массива
+        //и мы проверяем не вышли ли мы за границу цветов
+        //если вышли сбрасываем цвет к начальному состоянию и увеличиваем координату
+        if(currentColor==colorsCount) {
+                return getNextNodes(1, currentCoordinate + 1, acc);
+        }
         int[] nextArr = Arrays.copyOf(arr, arrLength);
-
-        nextArr[coordinate] = nextColor;//                                    |
-                                                       //all magic is there   V
-        final Node nextNode = new Node(this, nextArr, colorsCount, coordinate+1);
+        nextArr[currentCoordinate] = currentColor;//                           |
+                                                        //all magic is here    V
+        final Node nextNode = new Node(this, nextArr, colorsCount, currentCoordinate+1);
         System.out.println(Arrays.toString(nextNode.arr));
         acc.add(nextNode);
 
-        return getNextNodes(nextColor+1,acc);
+        return getNextNodes(currentColor+1,currentCoordinate,acc);
     }
 
     @Override
@@ -188,11 +195,7 @@ public class Node implements Iterable<Node>{
                 }
                 next=iterator!=null? iterator.next(): null;
             }
-
-
             return current;
-
-
         }
 
     }

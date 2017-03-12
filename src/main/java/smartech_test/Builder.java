@@ -1,8 +1,8 @@
 package smartech_test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.RecursiveTask;
 public class Builder extends RecursiveTask<Node> {
     private final Node currentNode;
     private final int deepLevel;
-    private final static int DEFAULT_DEEP_LEVEL=3;
+    private final static int DEFAULT_DEEP_LEVEL=0;
 
     public Builder(
               final Node currentNode
@@ -25,12 +25,10 @@ public class Builder extends RecursiveTask<Node> {
     @Override
     public Node compute() {
         final List<ForkJoinTask<Node>> tasks=new ArrayList<>();
-        final int currentColor=currentNode.getColor();
-        if (currentColor==currentNode.getColorsCount()){
-            return currentNode;
-        }
-        final int nextColor=currentColor+1;
-        final Set<Node> children=currentNode.createChildren(nextColor);
+        if (currentNode.isFinal()){
+            return currentNode;//тут без разницы что возвращать так как мы строим дерево состояний
+        };
+        final Collection<Node> children=currentNode.createChildren();
 
 //        System.out.println("curentNodeChildrenSize="+currentNode.getChildren().size());
         for (Node child:children) {
@@ -51,10 +49,11 @@ public class Builder extends RecursiveTask<Node> {
                 task.join();
             }
         }
+
         return currentNode;
     }
 
     private boolean isAsync() {
-        return deepLevel <= DEFAULT_DEEP_LEVEL;
+        return deepLevel < DEFAULT_DEEP_LEVEL;
     }
 }

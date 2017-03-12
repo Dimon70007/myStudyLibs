@@ -1,8 +1,10 @@
 package smartech_test;
 
 import java.awt.*;
-import java.util.*;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Deque;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
@@ -38,20 +40,21 @@ public class NodeHelper {
         return result;
     }
 
-    public static Set<Node> treeToSet(final Node node){
+    public static Collection<Node> treeToSet(final Node node){
         ForkJoinPool helperPool=new ForkJoinPool();
         final Helper helper=new Helper(node,0);
-        final ForkJoinTask<Set<Node>> helperTask=helper.fork();
+        final ForkJoinTask<Collection<Node>> helperTask=helper.fork();
         helperPool.submit(helperTask);
-        final Set<Node> nodes=new HashSet<>();
+        final Collection<Node> nodes=new ArrayList<>();
         nodes.addAll(helperTask.join());
         return nodes;
     }
 
-    private static class Helper extends RecursiveTask<Set<Node>> {
+    private static class Helper extends RecursiveTask<Collection<Node>> {
         private final Node currentNode;
         private final int deepLevel;
         private final static int DEFAULT_DEEP_LEVEL=3;
+//        private static volatile int childrenCount=0;
 
         public Helper(final Node currentNode, final int deepLevel) {
             this.currentNode=currentNode;
@@ -59,39 +62,43 @@ public class NodeHelper {
         }
 
         @Override
-        public Set<Node> compute() {
+        public  Collection<Node> compute() {
             if (!currentNode.hasChildren()){
-                return new HashSet<>();
+                Collection<Node> nodes=new ArrayList<>();
+//                nodes.add(currentNode);
+                return nodes;
             }
-            final List<ForkJoinTask<Set<Node>>> tasks=new ArrayList<>();
-            final Set<Node> children=new HashSet<>();
+            final Deque<ForkJoinTask<Collection<Node>>> tasks=new ArrayDeque<>();
+            final Collection<Node> children=new ArrayList<>();
+
             children.addAll(currentNode.getChildren());
-            final Set<Node> otherChildren=new HashSet<>();
-
+//                childrenCount+=children.size();
+            final Collection<Node> otherChildren=new ArrayList<>();
+//            otherChildren.add(currentNode);
             for (Node child:children) {
-                final Helper helper = new Helper(
-                        child
-                        , deepLevel + 1
-                );
-
+                final Helper helper =
+                        new Helper(child, deepLevel + 1);
                 if (isAsync()) {
-                    tasks.add(helper.fork());
+                    tasks.push(helper.fork());
                 } else {
                     otherChildren.addAll(helper.compute());
                 }
             }
 
             if (!tasks.isEmpty()){
-                for (ForkJoinTask<Set<Node>> task:tasks) {
+                for (ForkJoinTask<Collection<Node>> task:tasks) {
                     otherChildren.addAll(task.join());
                 }
+
             }
             children.addAll(otherChildren);
+//            if (childrenCount>50000)
+//                System.out.println("childrenCount="+childrenCount);
             return children;
         }
 
         private boolean isAsync() {
-            return deepLevel <= DEFAULT_DEEP_LEVEL;
+            return deepLevel < DEFAULT_DEEP_LEVEL;
         }
     }
 }

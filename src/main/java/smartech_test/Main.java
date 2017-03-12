@@ -11,9 +11,9 @@ public class Main {
     //задание:
     //сгенерировать все возможные массивы указанного размера (X_LENGTH,Y_LENGTH)с указанным количеством
     //состояний (COLORS) на ячейку массива
-    private static final int X_LENGTH=2;
-    private static final int Y_LENGTH=2;
-    private static final int COLORS=2;
+    private static final int X_LENGTH=3;
+    private static final int Y_LENGTH=1;
+    private static final int COLORS=3;
 
 
 
@@ -34,20 +34,24 @@ public class Main {
     }
 
     private static int testNG(){
-        Iterable<Node> rootNode=testStarter();
+        Node rootNode=testStarter();
 
         int countOfRightResults=1;
         final int expectedSize=(int)Math.pow(COLORS,X_LENGTH*Y_LENGTH);
-//        while (nodes.size()==expectedSize) {
+//        while (listNodes.size()==expectedSize) {
         int nodesCount=0;
-        for (Node node :rootNode
+        Collection<Node> listNodes=NodeHelper.treeToSet(rootNode);
+//        listNodes.add(rootNode);
+        Set<Node> setNodes=new HashSet<>();
+        for (Node node : listNodes
              ) {
+            setNodes.add(node);
             nodesCount++;
         }
             System.out.println("count of right results="+countOfRightResults);
 
-        System.out.println("nodes.size()="+nodesCount+" expectedSize="+expectedSize);
-//            nodes=testStarter();
+        System.out.println(Arrays.asList("listNodes.size()=",nodesCount," expectedSize=",(expectedSize) ," setNodes.size()=" ,setNodes.size()).toString());
+//            listNodes=testStarter();
 //
 //            countOfRightResults++;
 //            if (countOfRightResults>10)
@@ -55,10 +59,10 @@ public class Main {
 //
 //        }
         assert(expectedSize==nodesCount);
-        Iterator<Node> iterator=rootNode.iterator();
+        Iterator<Node> iterator=listNodes.iterator();
         try {
 
-            for (int i = 0; i < 200; i++) {
+            for (int i = 0; i < 20; i++) {
                 int [][] tmp=iterator.next().get2DArr(X_LENGTH);
                 System.out.println(Arrays.deepToString(tmp));
             }
@@ -66,7 +70,7 @@ public class Main {
         return countOfRightResults;
     }
 
-    public static Iterable<Node> testStarter(){
+    public static Node testStarter(){
         final ForkJoinPool pool=new ForkJoinPool();
         final Node rootNode=new Node(arrCreator(X_LENGTH,Y_LENGTH),COLORS);
         final Builder builder=new Builder(
