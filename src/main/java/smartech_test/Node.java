@@ -8,51 +8,47 @@ import java.util.*;
 public class Node implements Iterable<Node>{
 
     private final int[] arr;
-    private final int arrLength;
+    private final int lastElement;
     private final int colorsCount;
-    private final int color;
-    private final Set<Node> children;
+    private final int coordinate;
+    private final Collection<Node> children;
     private final Node parentNode;
 
     public Node(final Node parentNode
-            , final int [] arr
+            , final int[] arr
             , final int colorsCount
-            ,final int color) {
+            , final int coordinate) {
         this.parentNode=parentNode;
         this.arr=arr;
         this.colorsCount=colorsCount;
-        this.color = color;
-        this.children=new HashSet<>();
-        arrLength = this.arr.length;
+        this.coordinate=coordinate;
+        this.children=new ArrayList<>();
+        lastElement = this.arr[this.arr.length-1];
     }
 
-    public Node(final int [][] arr, final int colorsCount) {
+    public Node(final int[][] arr, final int colorsCount) {
         this.arr= NodeHelper
                 .convertMatrixToVector(arr);
-        this.color =0;
+        this.coordinate=0;
         this.colorsCount=colorsCount;
         this.parentNode=null;
-        this.children=new HashSet<>();
-        arrLength = this.arr.length;
+        this.children=new ArrayList<>();
+        lastElement = this.arr[this.arr.length-1];
     }
 
-    public int getColor() {
-        return color;
-    }
-
-    public int getColorsCount() {
-        return colorsCount;
+    public int getCoordinate() {
+        return coordinate;
     }
 
     public boolean hasChildren(){
         return !this.children.isEmpty();
     }
 
-    public Set<Node> getChildren() {
+    public Collection<Node> getChildren() {
         return children;
     }
 
-    public synchronized Set<Node> createChildren(final int nextColor) {
+    public synchronized Collection<Node> createChildren() {
         if(!hasChildren()){
         //если мы все равно сначала генерируем все возможные состояния для первой ячейки
             //то для второй - нужно начинать генерацию...со второй, но что делать с первой...
@@ -79,8 +75,7 @@ public class Node implements Iterable<Node>{
             //в общем будем генерировать множество потомков по одной координате с разными состояниями координаты
             // и потом у этих потомков брать следующую координату и генерить дальше, пока не окажется что
             //последняя координата = colorsCount-1
-            //короче размер поля 32x32 > количества цветов 256
-            this.children.addAll(getNextNodes(0,nextColor,new HashSet<>()));
+            this.children.addAll(getNextNodes(0,new ArrayList<>()));
         }
         return this.children;
     }
@@ -98,7 +93,7 @@ public class Node implements Iterable<Node>{
     }
 
     public boolean isFinal(){
-        return arr[arrLength-1]==colorsCount-1;
+        return coordinate==arr.length;
     }
 
     @Override
@@ -121,20 +116,23 @@ public class Node implements Iterable<Node>{
     создаем множество нод изменяя значение ячейки с текущей координатой,
     а сохраняем в ноды-потомки следующую координату, полученную параметром
     * */
-    private Set<Node> getNextNodes(final int currentCoordinate,final int nextColor,final Set<Node> acc){
-        if (arrLength==currentCoordinate) {
+    private Collection<Node> getNextNodes(final int nextColor,final Collection<Node> acc){
+//        if (coordinate==0 && nextColor==0){
+//            return getNextNodes(nextColor+1,acc);
+//        }
+        int arrLength=arr.length;
+        if(nextColor==colorsCount){
             return acc;
         }
-        final int nextCoordinate= currentCoordinate +1;
-        //currentCoordinate
-        int[] nextArr=Arrays.copyOf(arr,arr.length);
-        //внимание следим за руками)))
-        //здесь мы генерируем children с текущим цветом,
-        // а color туда передаем со следующим, получившим снаружи - nextColor
-        nextArr[currentCoordinate]=color;
-        final Node nextNode=new Node(this,nextArr,colorsCount,nextColor);
+        int[] nextArr = Arrays.copyOf(arr, arrLength);
+
+        nextArr[coordinate] = nextColor;//                                    |
+                                                       //all magic is there   V
+        final Node nextNode = new Node(this, nextArr, colorsCount, coordinate+1);
+        System.out.println(Arrays.toString(nextNode.arr));
         acc.add(nextNode);
-        return getNextNodes(nextCoordinate,nextColor,acc);
+
+        return getNextNodes(nextColor+1,acc);
     }
 
     @Override
