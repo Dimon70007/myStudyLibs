@@ -40,12 +40,13 @@ public class NodeHelper {
         return result;
     }
 
-    public static Collection<Node> treeToSet(final Node node){
+    public static Collection<Node> treeToSet(final Node rootNode){
         ForkJoinPool helperPool=new ForkJoinPool();
-        final Helper helper=new Helper(node,0);
+        final Helper helper=new Helper(rootNode,0);
         final ForkJoinTask<Collection<Node>> helperTask=helper.fork();
         helperPool.submit(helperTask);
         final Collection<Node> nodes=new ArrayList<>();
+        nodes.add(rootNode);
         nodes.addAll(helperTask.join());
         return nodes;
     }

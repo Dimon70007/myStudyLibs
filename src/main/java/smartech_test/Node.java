@@ -123,7 +123,7 @@ public class Node implements Iterable<Node>{
     private Collection<Node> getNextNodes(final int currentColor,final int currentCoordinate,final Collection<Node> acc){
         //если у нас нода с координатой ==arrLength у нее нечего генерить
         if (currentCoordinate==arrLength) {
-            System.out.println();
+//            System.out.println();
             return acc;
         }
         //если предыдущая проверка ==false значит у нас координата в пределах массива
@@ -136,7 +136,7 @@ public class Node implements Iterable<Node>{
         nextArr[currentCoordinate] = currentColor;//                           |
                                                         //all magic is here    V
         final Node nextNode = new Node(this, nextArr, colorsCount, currentCoordinate+1);
-        System.out.println(Arrays.toString(nextNode.arr));
+//        System.out.println(Arrays.toString(nextNode.arr));
         acc.add(nextNode);
 
         return getNextNodes(currentColor+1,currentCoordinate,acc);
