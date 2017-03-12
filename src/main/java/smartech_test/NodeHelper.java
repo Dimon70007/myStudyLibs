@@ -42,7 +42,7 @@ public class NodeHelper {
 
     public static Collection<Node> treeToSet(final Node rootNode){
         ForkJoinPool helperPool=new ForkJoinPool();
-        final Helper helper=new Helper(rootNode,0);
+        final TreeToSetHelper helper=new TreeToSetHelper(rootNode,0);
         final ForkJoinTask<Collection<Node>> helperTask=helper.fork();
         helperPool.submit(helperTask);
         final Collection<Node> nodes=new ArrayList<>();
@@ -51,13 +51,13 @@ public class NodeHelper {
         return nodes;
     }
 
-    private static class Helper extends RecursiveTask<Collection<Node>> {
+    private static class TreeToSetHelper extends RecursiveTask<Collection<Node>> {
         private final Node currentNode;
         private final int deepLevel;
         private final static int DEFAULT_DEEP_LEVEL=3;
 //        private static volatile int childrenCount=0;
 
-        public Helper(final Node currentNode, final int deepLevel) {
+        public TreeToSetHelper(final Node currentNode, final int deepLevel) {
             this.currentNode=currentNode;
             this.deepLevel=deepLevel;
         }
@@ -77,8 +77,8 @@ public class NodeHelper {
             final Collection<Node> otherChildren=new ArrayList<>();
 //            otherChildren.add(currentNode);
             for (Node child:children) {
-                final Helper helper =
-                        new Helper(child, deepLevel + 1);
+                final TreeToSetHelper helper =
+                        new TreeToSetHelper(child, deepLevel + 1);
                 if (isAsync()) {
                     tasks.push(helper.fork());
                 } else {

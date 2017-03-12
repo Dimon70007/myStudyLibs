@@ -12,7 +12,7 @@ import java.util.concurrent.RecursiveTask;
 public class Builder extends RecursiveTask<Node> {
     private final Node currentNode;
     private final int deepLevel;
-    private final static int DEFAULT_DEEP_LEVEL=0;
+    private final static int DEFAULT_DEEP_LEVEL=3;
 
     public Builder(
               final Node currentNode
@@ -54,6 +54,6 @@ public class Builder extends RecursiveTask<Node> {
     }
 
     private boolean isAsync() {
-        return deepLevel < DEFAULT_DEEP_LEVEL;
+        return deepLevel <= DEFAULT_DEEP_LEVEL;
     }
 }

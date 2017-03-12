@@ -10,10 +10,10 @@ import java.util.concurrent.ForkJoinTask;
 public class Main {
     //задание:
     //сгенерировать все возможные массивы указанного размера (X_LENGTH,Y_LENGTH)с указанным количеством
-    //состояний (COLORS) на ячейку массива
+    //состояний (COLORS) для каждой ячейки массива
     private static final int X_LENGTH=3;
-    private static final int Y_LENGTH=1;
-    private static final int COLORS=3;
+    private static final int Y_LENGTH=3;
+    private static final int COLORS=4;
 
 
 
@@ -41,16 +41,16 @@ public class Main {
 //        while (listNodes.size()==expectedSize) {
         int nodesCount=0;
         Collection<Node> listNodes=NodeHelper.treeToSet(rootNode);
-//        listNodes.add(rootNode);
-        Set<Node> setNodes=new HashSet<>();
+        Set<Node> uniqNodes=new HashSet<>();
+//        uniqNodes.addAll(listNodes);// убрал чтоб лишний проход не делать
         for (Node node : listNodes
              ) {
-            setNodes.add(node);
+            uniqNodes.add(node);//а тут добавил
             nodesCount++;
         }
             System.out.println("count of right results="+countOfRightResults);
 
-        System.out.println(Arrays.asList("listNodes.size()=",nodesCount," expectedSize=",(expectedSize) ," setNodes.size()=" ,setNodes.size()).toString());
+        System.out.println(Arrays.asList("listNodes.size()=",nodesCount," expectedSize=",(expectedSize) ," uniqNodes.size()=" ,uniqNodes.size()).toString());
 //            listNodes=testStarter();
 //
 //            countOfRightResults++;
