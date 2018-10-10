@@ -67,8 +67,8 @@ public class GUISearchForm extends JFrame {
         insertSearchingText.setSelectionStart(0);
         insertSearchingText.setText("Insert searching text");
         insertSearchingText.setToolTipText("");
-        insertSearchingText.putClientProperty("html.disable", Boolean.FALSE);
         insertSearchingText.putClientProperty("caretWidth", new Integer(12));
+        insertSearchingText.putClientProperty("html.disable", Boolean.FALSE);
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -84,8 +84,8 @@ public class GUISearchForm extends JFrame {
         insertPath.setSelectionStart(0);
         insertPath.setText("Insert path for search");
         insertPath.setToolTipText("");
-        insertPath.putClientProperty("html.disable", Boolean.FALSE);
         insertPath.putClientProperty("caretWidth", new Integer(12));
+        insertPath.putClientProperty("html.disable", Boolean.FALSE);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
